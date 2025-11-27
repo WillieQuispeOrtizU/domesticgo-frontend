@@ -1,4 +1,5 @@
 export const environment = {
-  production: false,
-  apiUrl: "http://localhost:8086",
-}
+  production: true, // Cambia a true
+  // Reemplaza esto con la URL real de tu backend en Render
+  apiUrl: "https://domesticgo-backend.onrender.com"
+};

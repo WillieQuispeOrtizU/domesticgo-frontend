@@ -42,7 +42,7 @@ export class ContratoCrearEditarComponent implements OnInit {
   isEditing = false
   contratoId: number | null = null
   loading = false
-
+  estadoContratoActual: string = "";
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -51,7 +51,7 @@ export class ContratoCrearEditarComponent implements OnInit {
     private usuarioService: UsuarioService,
     private ubicacionService: UbicacionService,
     private snackBar: MatSnackBar,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm()
@@ -104,17 +104,20 @@ export class ContratoCrearEditarComponent implements OnInit {
   }
 
   cargarContrato(id: number): void {
+
     this.contratoService.buscarPorId(id).subscribe({
       next: (contrato) => {
-        this.contratoForm.patchValue({
-          fechaInicio: contrato.fechaInicio,
-          fechaFinal: contrato.fechaFinal,
-          archivo: contrato.archivo,
-          descripcionContrato: contrato.descripcionContrato,
-          contratante: contrato.contratante?.idUsuario,
-          contratado: contrato.contratado?.idUsuario,
-          ubicacion: contrato.ubicacion?.idUbicacion,
-        })
+        this.estadoContratoActual = contrato.estadoContrato,
+
+          this.contratoForm.patchValue({
+            fechaInicio: contrato.fechaInicio,
+            fechaFinal: contrato.fechaFinal,
+            archivo: contrato.archivo,
+            descripcionContrato: contrato.descripcionContrato,
+            contratante: contrato.contratante?.idUsuario,
+            contratado: contrato.contratado?.idUsuario,
+            ubicacion: contrato.ubicacion?.idUbicacion,
+          })
       },
       error: (error) => {
         this.snackBar.open("Error al cargar contrato", "Cerrar", {
@@ -133,6 +136,7 @@ export class ContratoCrearEditarComponent implements OnInit {
         idContrato: this.contratoId || 0,
         fechaInicio: formData.fechaInicio,
         fechaFinal: formData.fechaFinal,
+        estadoContrato: this.isEditing ? this.estadoContratoActual : "ACTIVO",
         archivo: formData.archivo || "",
         descripcionContrato: formData.descripcionContrato,
         contratante: this.usuarios.find((u) => u.idUsuario === formData.contratante)!,

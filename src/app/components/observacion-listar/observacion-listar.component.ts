@@ -65,18 +65,7 @@ export class ObservacionListarComponent implements OnInit {
   }
 
   cargarObservaciones(): void {
-    this.loading = true
-    this.observacionService.listar().subscribe({
-      next: (data) => {
-        this.observaciones = data
-        this.aplicarFiltros()
-        this.loading = false
-      },
-      error: (error) => {
-        this.errorHandler.handleError(error)
-        this.loading = false
-      },
-    })
+    this.loading = false
   }
 
   aplicarFiltros(): void {
@@ -177,7 +166,7 @@ export class ObservacionListarComponent implements OnInit {
           width: "400px",
           data: observacion,
         })
-    
+
         dialogRef.afterClosed().subscribe((result) => {
           if (result) {
             this.cargarObservaciones()

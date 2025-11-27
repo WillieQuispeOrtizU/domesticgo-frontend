@@ -25,12 +25,16 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./chat-listar.component.css']
 })
 export class ChatComponent {
-  prompt: string = '';  // Mensaje enviado por el usuario
-  respuesta: string = '';  // Respuesta de la IA
-  isLoading = false;  // Flag para mostrar el spinner de carga
-  messages: { sender: string, text: string }[] = [];  // Para almacenar mensajes de la conversación
+  prompt: string = '';
+  respuesta: string = '';
+  isLoading = false;
 
-  // Lista de preguntas sugeridas para mostrar como botones
+  // Lista para la UI (Tu diseño actual)
+  messages: { sender: string, text: string }[] = [];
+
+  // NUEVA: Lista interna para el historial de Gemini
+  private geminiHistory: { role: string, parts: { text: string }[] }[] = [];
+
   suggestedQuestions = [
     "¿Cuáles son los servicios de DomestiGo?",
     "¿Qué tipo de trabajadores verificados ofrece DomestiGo?",
@@ -40,70 +44,68 @@ export class ChatComponent {
     "¿Que servicio requieres de DomestiGO?"
   ];
 
-  // Palabras clave relacionadas con servicios domésticos
-  trabajosRelacionados = ['hola','servicios', 'trabajadores', 'limpieza', 'cuidado', 'mantenimiento', 'hogar', 'jardinería', 'plomería', 'electricista', 'asistencia', 'cocina', 'organización'];
-
   constructor(private chatService: ChatService) {}
 
-  // Método que maneja el envío de un mensaje de texto por el usuario
   enviarMensaje() {
-    if (!this.prompt.trim()) {
-      return;
-    }
-    this.messages.push({ sender: 'user', text: this.prompt });
-    this.isLoading = true;
+    if (!this.prompt.trim()) return;
+
     const mensajeUsuario = this.prompt;
-    this.prompt = '';  // Limpiar el campo de texto
+    this.prompt = ''; // Limpiar input
 
-    // Detectamos si la pregunta está relacionada con un servicio doméstico
-    if (!this.esPreguntaRelacionada(mensajeUsuario)) {
-      this.mensajeIrrelevante();
-      return;
-    }
+    // 1. Agregar a la UI
+    this.messages.push({ sender: 'user', text: mensajeUsuario });
 
-    this.chatService.getResponse(mensajeUsuario).subscribe({
+    // 2. Agregar al historial de Gemini (role: 'user')
+    this.geminiHistory.push({
+      role: 'user',
+      parts: [{ text: mensajeUsuario }]
+    });
+
+    this.isLoading = true;
+
+    // 3. Enviar TODO el historial al servicio
+    this.chatService.getResponse(this.geminiHistory).subscribe({
       next: (res) => {
         this.respuesta = res.candidates?.[0]?.content?.parts?.[0]?.text || 'Sin respuesta';
 
-        // Limitar la longitud de la respuesta y agregar un "ver más"
-        if (this.respuesta.length > 250) {
-          this.respuesta = this.respuesta.slice(0, 250) + '...';
+        if (this.respuesta.length > 1500) {
+          this.respuesta = this.respuesta.slice(0, 1500) + '...';
         }
 
-        // Formatear la respuesta para que sea más breve y ordenada
+        // 4. Agregar respuesta a la UI
         this.messages.push({ sender: 'ai', text: this.formatearRespuesta(this.respuesta) });
+
+        // 5. Agregar respuesta al historial de Gemini (role: 'model')
+        // IMPORTANTE: Gemini usa 'model' para referirse a la IA
+        this.geminiHistory.push({
+          role: 'model',
+          parts: [{ text: this.respuesta }]
+        });
+
         this.isLoading = false;
       },
       error: (err) => {
         console.error(err);
+        // Si hay error, eliminamos el último mensaje de usuario del historial para no corromper la conversación
+        this.geminiHistory.pop();
         this.messages.push({ sender: 'ai', text: 'Hubo un error al consultar la IA.' });
         this.isLoading = false;
       },
     });
   }
 
-  // Método para verificar si la pregunta es relevante
-  esPreguntaRelacionada(pregunta: string): boolean {
-    // Comprobamos si la pregunta contiene alguna palabra clave relacionada con los servicios de DomestiGo
-    return this.trabajosRelacionados.some((palabra) => pregunta.toLowerCase().includes(palabra));
-  }
-
-  // Método para responder cuando la pregunta es irrelevante
-  mensajeIrrelevante() {
-    const mensaje = "DomestiGo se dedica a ofrecer servicios de trabajadores domésticos y mantenimiento del hogar. Si deseas obtener más información sobre nuestros servicios, por favor consulta los siguientes temas.";
-    this.messages.push({ sender: 'ai', text: mensaje });
-    this.isLoading = false;
-  }
-
-  // Método para formatear las respuestas y hacerlas más legibles
   formatearRespuesta(respuesta: string): string {
-    const fragmentos = respuesta.split('. ');
-    return fragmentos.map((frag) => `<p>${frag}</p>`).join('');
+    let formatted = respuesta
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\* (.*?)(?=\n|<br>|$)/g, '• $1'); // Mejorar viñetas
+
+    return `<p>${formatted}</p>`;
   }
 
-  // Método que maneja el envío de una pregunta sugerida al hacer clic en ella
   enviarPregunta(question: string) {
-    this.prompt = question;  // Asigna la pregunta seleccionada al campo de texto
-    this.enviarMensaje();  // Envía el mensaje automáticamente
+    this.prompt = question;
+    this.enviarMensaje();
   }
 }

@@ -4,6 +4,7 @@ import { Ubicacion } from "./ubicacion"
 export interface Contrato {
   idContrato: number
   fechaInicio: Date
+  estadoContrato:string
   fechaFinal: Date
   archivo: string
   descripcionContrato: string

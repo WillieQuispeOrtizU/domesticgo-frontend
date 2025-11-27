@@ -24,8 +24,7 @@ export class ObservacionService {
     })
   }
 
-  listar(): Observable<Observacion[]> {
-    return this.http.get<Observacion[]>(`${this.apiUrl}/listado`, { headers: this.getHeaders() })
+  listar(){
   }
 
   buscarPorId(id: number): Observable<Observacion> {
