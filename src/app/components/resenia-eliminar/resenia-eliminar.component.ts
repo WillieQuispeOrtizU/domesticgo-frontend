@@ -19,18 +19,18 @@ import { Resenia } from "../../models/resenia"
         </div>
         <h2 class="dialog-title">Confirmar Eliminación</h2>
       </div>
-      
+
       <div class="dialog-content">
         <p class="dialog-message">
-          ¿Está seguro que desea eliminar la reseña de 
+          ¿Está seguro que desea eliminar la reseña de
           <strong>{{data.usuario.nombres}} {{data.usuario.apellidoPaterno}}</strong>?
         </p>
         <p class="dialog-detail">
-          "{{data.detalleResenia.substring(0, 100)}}{{data.detalleResenia.length > 100 ? '...' : ''}}"
+          "{{data.comentarioResenia.substring(0, 100)}}{{data.comentarioResenia.length > 100 ? '...' : ''}}"
         </p>
         <p class="dialog-warning">Esta acción no se puede deshacer.</p>
       </div>
-      
+
       <div class="dialog-actions">
         <button mat-button (click)="onNoClick()" class="cancel-button">
           <mat-icon>close</mat-icon>
