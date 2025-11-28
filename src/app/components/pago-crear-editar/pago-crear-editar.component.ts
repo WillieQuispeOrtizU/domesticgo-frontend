@@ -51,7 +51,7 @@ export class PagoCrearEditarComponent implements OnInit {
     private usuarioService: UsuarioService,
     private contratoService: ContratoService,
     private errorHandler: ErrorHandlerService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm()
@@ -115,6 +115,7 @@ export class PagoCrearEditarComponent implements OnInit {
         fechaPago: formData.fechaPago,
         montoPago: formData.montoPago,
         tipoPago: formData.tipoPago,
+        estadoPago: "PAGADO",
         tipoComprobante: formData.tipoComprobante,
         bancoPago: formData.bancoPago,
         contrato: this.contratos.find((c) => c.idContrato === formData.contrato)!,

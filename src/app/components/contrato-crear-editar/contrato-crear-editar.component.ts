@@ -43,6 +43,8 @@ export class ContratoCrearEditarComponent implements OnInit {
   contratoId: number | null = null
   loading = false
   estadoContratoActual: string = "";
+  minDate: Date = new Date();
+  
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,

@@ -9,7 +9,8 @@
         <mat-icon>{{isEditing ? 'edit' : 'add'}}</mat-icon>
         {{isEditing ? 'Editar Reseña' : 'Crear Reseña'}}
       </h1>
-      <p class="page-subtitle">{{isEditing ? 'Modifica la información de la reseña' : 'Completa los datos de la nueva reseña'}}</p>
+      <p class="page-subtitle">{{isEditing ? 'Modifica la información de la reseña' : 'Completa los datos de la nueva
+        reseña'}}</p>
     </div>
   </div>
 
@@ -30,7 +31,20 @@
               </mat-error>
             </mat-form-field>
           </div>
-
+          <div class="form-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Calificación</mat-label>
+              <mat-select formControlName="calificacionResenia" required>
+                <mat-option *ngFor="let star of calificaciones" [value]="star">
+                  {{star}} ⭐
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>star_rate</mat-icon>
+              <mat-error *ngIf="reseniaForm.get('calificacionResenia')?.hasError('required')">
+                La calificación es requerida
+              </mat-error>
+            </mat-form-field>
+          </div>
           <!-- Usuario -->
           <div class="form-field">
             <mat-form-field appearance="outline">
@@ -66,13 +80,14 @@
           <!-- Detalle de la Reseña -->
           <div class="form-field full-width">
             <mat-form-field appearance="outline">
-              <mat-label>Detalle de la Reseña</mat-label>
-              <textarea matInput formControlName="detalleResenia" rows="4" required></textarea>
-              <mat-icon matSuffix>star</mat-icon>
-              <mat-error *ngIf="reseniaForm.get('detalleResenia')?.hasError('required')">
-                El detalle de la reseña es requerido
+              <mat-label>Comentario</mat-label>
+              <textarea matInput formControlName="comentarioResenia" rows="4" required
+                placeholder="Describe tu experiencia..."></textarea>
+              <mat-icon matSuffix>comment</mat-icon>
+              <mat-error *ngIf="reseniaForm.get('comentarioResenia')?.hasError('required')">
+                El comentario es requerido
               </mat-error>
-              <mat-error *ngIf="reseniaForm.get('detalleResenia')?.hasError('maxlength')">
+              <mat-error *ngIf="reseniaForm.get('comentarioResenia')?.hasError('maxlength')">
                 Máximo 500 caracteres
               </mat-error>
             </mat-form-field>
@@ -85,8 +100,8 @@
             <mat-icon>close</mat-icon>
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="submit"
-                   [disabled]="!reseniaForm.valid || loading" class="submit-button">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!reseniaForm.valid || loading"
+            class="submit-button">
             <mat-icon>{{loading ? 'hourglass_empty' : (isEditing ? 'save' : 'add')}}</mat-icon>
             {{loading ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}}
           </button>

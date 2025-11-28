@@ -44,7 +44,7 @@ export class ReseniaCrearEditarComponent implements OnInit {
   isEditing = false
   reseniaId: number | null = null
   loading = false
-
+  calificaciones = [1, 2, 3, 4, 5];
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -53,7 +53,7 @@ export class ReseniaCrearEditarComponent implements OnInit {
     private usuarioService: UsuarioService,
     private servicioService: ServicioService,
     private errorHandler: ErrorHandlerService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm()
@@ -69,7 +69,8 @@ export class ReseniaCrearEditarComponent implements OnInit {
   initForm(): void {
     this.reseniaForm = this.formBuilder.group({
       fechaResenia: [new Date(), [Validators.required]],
-      detalleResenia: ["", [Validators.required, Validators.maxLength(500)]],
+      comentarioResenia: ["", [Validators.required, Validators.maxLength(500)]],
+      calificacionResenia: [5, [Validators.required]],
       usuario: ["", [Validators.required]],
       servicio: ["", [Validators.required]],
     })
@@ -100,14 +101,13 @@ export class ReseniaCrearEditarComponent implements OnInit {
       next: (resenia) => {
         this.reseniaForm.patchValue({
           fechaResenia: new Date(resenia.fechaResenia),
-          detalleResenia: resenia.detalleResenia,
+          comentarioResenia: resenia.comentarioResenia,
+          calificacionResenia: resenia.calificacionResenia,
           usuario: resenia.usuario?.idUsuario,
           servicio: resenia.servicio?.idServicio,
         })
       },
-      error: (error) => {
-        this.errorHandler.handleError(error)
-      },
+      error: (error) => this.errorHandler.handleError(error),
     })
   }
 
@@ -116,15 +116,20 @@ export class ReseniaCrearEditarComponent implements OnInit {
       this.loading = true
       const formData = this.reseniaForm.value
 
+
+
       const resenia: Resenia = {
         idResenia: this.reseniaId || 0,
-        fechaResenia: formData.fechaResenia,
-        detalleResenia: formData.detalleResenia,
-        usuario: this.usuarios.find((u) => u.idUsuario === formData.usuario)!,
-        servicio: this.servicios.find((s) => s.idServicio === formData.servicio)!,
+        fechaResenia: (formData.fechaResenia),
+        comentarioResenia: formData.comentarioResenia,
+        calificacionResenia: formData.calificacionResenia,
+        usuario: this.usuarios.find(u => u.idUsuario === formData.usuario)!,
+        servicio: this.servicios.find(s => s.idServicio === formData.servicio)!,
       }
 
-      const operation = this.isEditing ? this.reseniaService.modificar(resenia) : this.reseniaService.registrar(resenia)
+      const operation = this.isEditing
+        ? this.reseniaService.modificar(resenia)
+        : this.reseniaService.registrar(resenia)
 
       operation.subscribe({
         next: () => {

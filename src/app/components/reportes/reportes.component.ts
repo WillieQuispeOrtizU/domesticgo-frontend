@@ -48,7 +48,10 @@ interface ServiciosPendientesData {
   totalPendientes: number
   serviciosPorTipo: { tipo: string; cantidad: number }[]
 }
-
+interface DistribucionCalificacionesData {
+  calificacion: number;
+  cantidad: number;
+}
 @Component({
   selector: "app-reportes",
   standalone: true,
@@ -87,7 +90,7 @@ export class ReportesComponent implements OnInit, AfterViewInit {
   reseniasPorTrabajador: ReseniasPorTrabajadorData[] = []
   serviciosPendientes: ServiciosPendientesData | null = null
   ingresosPorServicio: IngresosPorServicioData[] = []
-
+distribucionCalificaciones: DistribucionCalificacionesData[] = [];
   // Charts
   private charts: { [key: string]: Chart } = {}
 
@@ -202,19 +205,6 @@ export class ReportesComponent implements OnInit, AfterViewInit {
     })
   }
 
-  cargarReporteResenias(): void {
-    this.reporteService.obtenerReseniasPorTrabajador().subscribe({
-      next: (data: any) => {
-        this.reseniasPorTrabajador = data
-        this.loading = false
-        setTimeout(() => this.crearGraficoResenias(), 100)
-      },
-      error: (error) => {
-        this.errorHandler.handleError(error)
-        this.loading = false
-      },
-    })
-  }
 
   cargarReportePendientes(): void {
     this.reporteService.obtenerServiciosPendientes().subscribe({
@@ -341,7 +331,7 @@ export class ReportesComponent implements OnInit, AfterViewInit {
         plugins: {
           title: {
             display: true,
-            text: `Monto total: $${this.totalPagos.totalPagos?.toLocaleString() || 0}`,
+            text: `Total de Pagos: ${this.totalPagos.totalPagos?.toLocaleString() || 0}`,
           },
         },
         scales: {
@@ -355,39 +345,64 @@ export class ReportesComponent implements OnInit, AfterViewInit {
     this.charts["pagos"] = new Chart(ctx, config)
   }
 
-  crearGraficoResenias(): void {
-    if (!this.reseniasChart?.nativeElement || !this.reseniasPorTrabajador?.length) return
+cargarReporteResenias(): void {
+    this.reporteService.obtenerDistribucionCalificaciones().subscribe({
+      next: (data: any) => {
+        this.distribucionCalificaciones = data
+        this.loading = false
+        setTimeout(() => this.crearGraficoResenias(), 100)
+      },
+      error: (error) => {
+        this.errorHandler.handleError(error)
+        this.loading = false
+      },
+    })
+  }
+
+crearGraficoResenias(): void {
+    if (!this.reseniasChart?.nativeElement || !this.distribucionCalificaciones?.length) return
 
     const ctx = this.reseniasChart.nativeElement.getContext("2d")
     if (!ctx) return
 
+    let totalVotos = 0;
+    let sumaPonderada = 0;
+    this.distribucionCalificaciones.forEach(d => {
+      totalVotos += d.cantidad;
+      sumaPonderada += (d.calificacion * d.cantidad);
+    });
+    const promedio = totalVotos > 0 ? (sumaPonderada / totalVotos).toFixed(1) : "0.0";
+
     const config: ChartConfiguration = {
-      type: "bar",
+      type: "pie",
       data: {
-        labels: this.reseniasPorTrabajador.map((item) => item.trabajador || "Sin nombre"),
+        labels: ["1 estrella", "2 estrellas", "3 estrellas", "4 estrellas", "5 estrellas"],
         datasets: [
           {
-            label: "Promedio de Calificación",
-            data: this.reseniasPorTrabajador.map((item) => item.promedioCalificacion || 0),
-            backgroundColor: "rgba(153, 102, 255, 0.8)",
-            borderColor: "rgba(153, 102, 255, 1)",
+            data: this.distribucionCalificaciones.map((item) => item.cantidad),
+            backgroundColor: [
+              "#db0e0e",
+              "#db3434",
+              "#eb7575",
+              "#7cf797",
+              "#37f360",
+            ],
             borderWidth: 1,
           },
         ],
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           title: {
             display: true,
-            text: `Trabajadores evaluados: ${this.reseniasPorTrabajador.length}`,
+            text: `PROMEDIO DE CALIFICACIÓN: ${promedio} ESTRELLAS`,
+            font: { size: 16 }
           },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 5,
-          },
+          legend: {
+            position: 'right',
+          }
         },
       },
     }
@@ -524,7 +539,9 @@ export class ReportesComponent implements OnInit, AfterViewInit {
   getTotalIngresos(): number {
     return this.ingresosPorServicio.reduce((sum, i) => sum + (i.totalIngresos || 0), 0)
   }
-
+getTotalResenias(): number {
+    return this.distribucionCalificaciones.reduce((acc, curr) => acc + curr.cantidad, 0);
+  }
   get tituloReporte(): string {
     switch (this.tipoReporteSeleccionado) {
       case "servicios":
@@ -533,8 +550,8 @@ export class ReportesComponent implements OnInit, AfterViewInit {
         return "Reporte de Clientes Recurrentes"
       case "pagos":
         return "Reporte de Pagos"
-      case "resenias":
-        return "Reporte de Reseñas por Trabajador"
+case "resenias":
+        return "Promedio de Reseñas";
       case "pendientes":
         return "Reporte de Servicios Pendientes"
       case "ingresos":

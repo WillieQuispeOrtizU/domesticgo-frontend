@@ -80,7 +80,7 @@ export class ReseniaListarComponent implements OnInit {
       const term = this.searchTerm.toLowerCase()
       resultado = resultado.filter(
         (resenia) =>
-          resenia.detalleResenia.toLowerCase().includes(term) ||
+          resenia.comentarioResenia?.toLowerCase().includes(term) ||
           resenia.usuario.nombres.toLowerCase().includes(term) ||
           resenia.usuario.apellidoPaterno.toLowerCase().includes(term) ||
           resenia.servicio.tipoServicio.toLowerCase().includes(term),
@@ -91,7 +91,9 @@ export class ReseniaListarComponent implements OnInit {
     this.totalItems = resultado.length
     this.currentPage = 1
   }
-
+getEstrellas(calificacion: number): string {
+    return '⭐'.repeat(calificacion);
+  }
   onSearchChange(): void {
     this.aplicarFiltros()
   }
@@ -119,7 +121,7 @@ export class ReseniaListarComponent implements OnInit {
             width: "400px",
             data: resenia,
           })
-      
+
           dialogRef.afterClosed().subscribe((result) => {
             if (result) {
               this.cargarResenias()

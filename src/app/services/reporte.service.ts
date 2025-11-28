@@ -43,10 +43,15 @@ export class ReporteService {
     })
   }
 
+obtenerDistribucionCalificaciones(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/resenias/distribucion-calificaciones`, {
+      headers: this.getHeaders(),
+    })
+  }
   // Reportes de pagos
   obtenerTotalPagos(fechaInicio: string, fechaFin: string): Observable<TotalPagosDTO> {
     return this.http.get<TotalPagosDTO>(
-      `${this.apiUrl}/pagos/total-pagos?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+      `${this.apiUrl}/pagos/Total-pagos-por-fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
       { headers: this.getHeaders() },
     )
   }

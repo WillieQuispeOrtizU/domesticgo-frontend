@@ -17,16 +17,18 @@
   <div class="form-section">
     <div class="form-card">
       <form [formGroup]="contratoForm" (ngSubmit)="onSubmit()">
-        <div class="form-grid">
-          <!-- Fechas -->
+<div class="form-grid">
           <div class="form-field">
             <mat-form-field appearance="outline">
               <mat-label>Fecha de Inicio</mat-label>
-              <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" required>
+              <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" required [min]="minDate">
               <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
               <mat-datepicker #pickerInicio></mat-datepicker>
               <mat-error *ngIf="contratoForm.get('fechaInicio')?.hasError('required')">
                 La fecha de inicio es requerida
+              </mat-error>
+              <mat-error *ngIf="contratoForm.get('fechaInicio')?.hasError('matDatepickerMin')">
+                La fecha no puede ser en el pasado
               </mat-error>
             </mat-form-field>
           </div>
@@ -34,11 +36,14 @@
           <div class="form-field">
             <mat-form-field appearance="outline">
               <mat-label>Fecha Final</mat-label>
-              <input matInput [matDatepicker]="pickerFinal" formControlName="fechaFinal" required>
+              <input matInput [matDatepicker]="pickerFinal" formControlName="fechaFinal" required [min]="minDate">
               <mat-datepicker-toggle matSuffix [for]="pickerFinal"></mat-datepicker-toggle>
               <mat-datepicker #pickerFinal></mat-datepicker>
               <mat-error *ngIf="contratoForm.get('fechaFinal')?.hasError('required')">
                 La fecha final es requerida
+              </mat-error>
+              <mat-error *ngIf="contratoForm.get('fechaFinal')?.hasError('matDatepickerMin')">
+                La fecha no puede ser en el pasado
               </mat-error>
             </mat-form-field>
           </div>
@@ -121,7 +126,7 @@
             <mat-icon>close</mat-icon>
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="submit" 
+          <button mat-raised-button color="primary" type="submit"
                   [disabled]="!contratoForm.valid || loading" class="submit-button">
             <mat-icon>{{loading ? 'hourglass_empty' : (isEditing ? 'save' : 'add')}}</mat-icon>
             {{loading ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}}

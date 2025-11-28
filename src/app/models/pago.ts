@@ -6,6 +6,7 @@ export interface Pago {
   tipoComprobante: string
   bancoPago: string
   fechaPago: Date
+  estadoPago:string
   montoPago: number
   contrato: Contrato
 }
