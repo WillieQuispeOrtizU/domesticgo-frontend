@@ -9,7 +9,10 @@ import { MatSelectModule } from "@angular/material/select"
 import { MatButtonModule } from "@angular/material/button"
 import { MatToolbarModule } from "@angular/material/toolbar"
 import { MatIconModule } from "@angular/material/icon"
+import { MatDatepickerModule } from "@angular/material/datepicker"
+import { MatNativeDateModule } from "@angular/material/core"
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar"
+
 import { Usuario } from "../../models/usuario"
 import { Empleo } from "../../models/empleo"
 import { UsuarioService } from "../../services/usuario.service"
@@ -29,6 +32,8 @@ import { EmpleoService } from "../../services/empleo.service"
     MatToolbarModule,
     MatIconModule,
     MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   templateUrl: "./usuario-crear-editar.component.html",
   styleUrls: ["./usuario-crear-editar.component.css"],
@@ -67,21 +72,21 @@ export class UsuarioCrearEditarComponent implements OnInit {
       apellidoPaterno: ["", [Validators.maxLength(50)]],
       apellidoMaterno: ["", [Validators.maxLength(50)]],
       email: ["", [Validators.required, Validators.email, Validators.maxLength(100)]],
-      foto: ["", [Validators.maxLength(255)]],
+
+      // Nuevos campos
+      tipoDocumento: ["DNI", [Validators.required]],
+      numeroDocumento: ["", [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
+      numeroCelular: ["", [Validators.required, Validators.minLength(9)]],
+      fechaNacimiento: ["", [Validators.required]],
+
       empleo: ["", [Validators.required]],
     })
   }
 
   cargarEmpleos(): void {
     this.empleoService.listar().subscribe({
-      next: (data) => {
-        this.empleos = data
-      },
-      error: (error) => {
-        this.snackBar.open("Error al cargar empleos", "Cerrar", {
-          duration: 3000,
-        })
-      },
+      next: (data) => (this.empleos = data),
+      error: () => this.snackBar.open("Error al cargar empleos", "Cerrar", { duration: 3000 }),
     })
   }
 
@@ -93,15 +98,15 @@ export class UsuarioCrearEditarComponent implements OnInit {
           apellidoPaterno: usuario.apellidoPaterno,
           apellidoMaterno: usuario.apellidoMaterno,
           email: usuario.email,
-          foto: usuario.foto,
+          tipoDocumento: usuario.tipoDocumento,
+          numeroDocumento: usuario.numeroDocumento,
+          numeroCelular: usuario.numeroCelular,
+          fechaNacimiento: usuario.fechaNacimiento ? new Date(usuario.fechaNacimiento as string) : null,
+
           empleo: usuario.empleo?.idEmpleo,
         })
       },
-      error: (error) => {
-        this.snackBar.open("Error al cargar usuario", "Cerrar", {
-          duration: 3000,
-        })
-      },
+      error: () => this.snackBar.open("Error al cargar usuario", "Cerrar", { duration: 3000 }),
     })
   }
 
@@ -110,30 +115,36 @@ export class UsuarioCrearEditarComponent implements OnInit {
       this.loading = true
       const formData = this.usuarioForm.value
 
+      const formatearFecha = (fecha: any): string => {
+        if (!fecha) return '';
+        return new Date(fecha).toISOString().split('T')[0];
+      };
+
       const usuario: Usuario = {
         idUsuario: this.usuarioId || 0,
         nombres: formData.nombres,
         apellidoPaterno: formData.apellidoPaterno,
         apellidoMaterno: formData.apellidoMaterno,
         email: formData.email,
-        foto: formData.foto,
+        tipoDocumento: formData.tipoDocumento,
+        numeroDocumento: formData.numeroDocumento,
+        numeroCelular: formData.numeroCelular,
+        fechaNacimiento: formatearFecha(formData.fechaNacimiento),
+
         empleo: this.empleos.find((e) => e.idEmpleo === formData.empleo)!,
-        role: { id: 0, rol: "" }, // Valor por defecto
       }
 
-      const operation = this.isEditing ? this.usuarioService.modificar(usuario) : this.usuarioService.registrar(usuario)
+      const operation = this.isEditing
+        ? this.usuarioService.modificar(usuario)
+        : this.usuarioService.registrar(usuario)
 
       operation.subscribe({
         next: () => {
-          this.snackBar.open(`Usuario ${this.isEditing ? "actualizado" : "creado"} correctamente`, "Cerrar", {
-            duration: 3000,
-          })
+          this.snackBar.open(`Usuario ${this.isEditing ? "actualizado" : "creado"} correctamente`, "Cerrar", { duration: 3000 })
           this.router.navigate(["/usuarios"])
         },
-        error: (error) => {
-          this.snackBar.open("Error al guardar usuario", "Cerrar", {
-            duration: 3000,
-          })
+        error: () => {
+          this.snackBar.open("Error al guardar usuario", "Cerrar", { duration: 3000 })
           this.loading = false
         },
       })

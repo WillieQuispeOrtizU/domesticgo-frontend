@@ -32,17 +32,17 @@
           <span class="badge-icon">⭐</span>
           <span>Plataforma #1 en Servicios</span>
         </div>
-        
+
         <h1 class="hero-title">
           <span class="title-main">Servicios Domésticos</span>
           <span class="title-highlight">de Calidad Premium</span>
         </h1>
-        
+
         <p class="hero-subtitle">
-          Conectamos a los mejores profesionales verificados con tu hogar. 
+          Conectamos a los mejores profesionales verificados con tu hogar.
           Calidad garantizada, confianza asegurada, resultados excepcionales.
         </p>
-        
+
         <div class="hero-stats">
           <div class="stat-item">
             <div class="stat-icon">✅</div>
@@ -66,7 +66,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="hero-buttons">
           <button class="cta-primary" (click)="goToLogin()">
             <span class="btn-icon">🚀</span>
@@ -78,7 +78,7 @@
           </button>
         </div>
       </div>
-      
+
       <div class="hero-visual">
         <div class="hero-icon-container">
           <div class="main-icon">🏡</div>
@@ -104,7 +104,7 @@
         <h2 class="section-title">Servicios Especializados</h2>
         <p class="section-subtitle">Profesionales certificados para cada necesidad de tu hogar</p>
       </div>
-      
+
       <div class="services-grid">
         <div class="service-card" *ngFor="let service of services; let i = index">
           <div class="service-header">
@@ -144,7 +144,7 @@
           </div>
           <h2>La Plataforma Líder en Servicios Domésticos</h2>
           <p>Con años de experiencia y miles de clientes satisfechos, somos la opción más confiable para el cuidado de tu hogar. Nuestros profesionales están verificados y capacitados para brindarte el mejor servicio.</p>
-          
+
           <div class="features-list">
             <div class="feature-item">
               <div class="feature-icon">✅</div>
@@ -168,7 +168,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="trust-indicators">
             <div class="trust-item">
               <span class="trust-icon">🛡️</span>
@@ -184,7 +184,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="about-visual">
           <div class="about-icon-grid">
             <div class="grid-item item-1">
@@ -226,7 +226,7 @@
         </div>
         <h2 class="section-title">Lo que dicen nuestros clientes</h2>
       </div>
-      
+
       <div class="testimonials-grid">
         <div class="testimonial-card" *ngFor="let testimonial of testimonials">
           <div class="testimonial-header">
@@ -257,7 +257,7 @@
         <h2 class="section-title">¿Listo para Comenzar?</h2>
         <p class="section-subtitle">Estamos aquí para ayudarte. Contáctanos y descubre cómo podemos transformar tu hogar</p>
       </div>
-      
+
       <div class="contact-content">
         <div class="contact-info">
           <div class="contact-card">
@@ -279,14 +279,14 @@
             <span class="contact-label">Cobertura nacional</span>
           </div>
         </div>
-        
+
         <div class="contact-form-container">
           <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()" class="contact-form">
             <div class="form-header">
               <span class="form-icon">💬</span>
               <h3>Envíanos un mensaje</h3>
             </div>
-            
+
             <div class="form-row">
               <div class="input-group">
                 <label for="nombre">Nombre Completo</label>
@@ -299,18 +299,18 @@
                 <span class="input-icon">📧</span>
               </div>
             </div>
-            
+
             <div class="input-group">
               <label for="telefono">Teléfono</label>
               <input type="tel" id="telefono" formControlName="telefono" placeholder="+51 999 888 777">
               <span class="input-icon">📱</span>
             </div>
-            
+
             <div class="input-group">
               <label for="mensaje">Mensaje</label>
               <textarea id="mensaje" formControlName="mensaje" rows="4" placeholder="Cuéntanos cómo podemos ayudarte..."></textarea>
             </div>
-            
+
             <button type="submit" [disabled]="contactForm.invalid" class="submit-btn">
               <span class="btn-icon">📤</span>
               Enviar Mensaje
@@ -338,7 +338,7 @@
             <a href="#" class="social-btn">💼</a>
           </div>
         </div>
-        
+
         <div class="footer-section">
           <h4>Servicios</h4>
           <a href="#servicios">🔧 Fontanería</a>
@@ -346,7 +346,7 @@
           <a href="#servicios">🧹 Limpieza</a>
           <a href="#servicios">🔨 Carpintería</a>
         </div>
-        
+
         <div class="footer-section">
           <h4>Empresa</h4>
           <a href="#nosotros">ℹ️ Nosotros</a>
@@ -354,7 +354,7 @@
           <a href="#">📄 Términos</a>
           <a href="#">🔒 Privacidad</a>
         </div>
-        
+
         <div class="footer-section">
           <h4>Contacto</h4>
           <div class="footer-contact">
@@ -371,7 +371,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="footer-bottom">
         <p>&copy; 2024 DomestiGo. Todos los derechos reservados.</p>
         <div class="footer-badges">

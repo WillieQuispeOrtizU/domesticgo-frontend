@@ -1044,65 +1044,65 @@
     visibility: hidden;
     transition: all 0.3s ease;
   }
-  
+
   .nav-menu.active {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
   }
-  
+
   .nav-toggle {
     display: flex;
   }
-  
+
   .hero-content {
     grid-template-columns: 1fr;
     text-align: center;
     gap: 40px;
   }
-  
+
   .hero-title {
     font-size: 2.5rem;
   }
-  
+
   .hero-stats {
     flex-direction: column;
     gap: 20px;
     align-items: center;
   }
-  
+
   .hero-buttons {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .about-content,
   .contact-content {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  
+
   .services-grid,
   .testimonials-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .footer-content {
     grid-template-columns: 1fr;
     text-align: center;
     gap: 30px;
   }
-  
+
   .footer-bottom {
     flex-direction: column;
     gap: 20px;
     text-align: center;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .section-title {
     font-size: 2rem;
   }
@@ -1112,17 +1112,17 @@
   .hero-title {
     font-size: 2rem;
   }
-  
+
   .hero-stats {
     align-items: center;
   }
-  
+
   .stat-item {
     flex-direction: column;
     text-align: center;
     gap: 8px;
   }
-  
+
   .contact-form-container {
     padding: 24px;
   }

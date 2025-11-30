@@ -26,7 +26,7 @@ import { ReservaCrearEditarComponent } from "./components/reserva-crear-editar/r
 import { UbicacionListarComponent } from "./components/ubicacion-listar/ubicacion-listar.component"
 import { UbicacionCrearEditarComponent } from "./components/ubicacion-crear-editar/ubicacion-crear-editar.component"
 import { ChatComponent } from "./components/chat-listar/chat-listar.component"
-
+import { RoleGuard } from "./guards/role.guard"
 export const routes: Routes = [
   { path: "", component: LandingComponent },
   { path: "login", component: LoginComponent },
@@ -48,10 +48,14 @@ export const routes: Routes = [
       { path: "contratos", component: ContratoListarComponent },
       { path: "contratos/crear", component: ContratoCrearEditarComponent },
       { path: "contratos/editar/:id", component: ContratoCrearEditarComponent },
-      { path: "chats", component: ChatComponent},
+      { path: "chats", component: ChatComponent },
       { path: "notificaciones", component: NotificacionListarComponent },
-      { path: "notificaciones/crear", component: NotificacionCrearEditarComponent },
-      { path: "notificaciones/editar/:id", component: NotificacionCrearEditarComponent },
+      {
+        path: "notificaciones/crear",
+        component: NotificacionCrearEditarComponent,
+        canActivate: [RoleGuard],
+        data: { expectedRole: 'ADMIN' }
+      }, { path: "notificaciones/editar/:id", component: NotificacionCrearEditarComponent },
       { path: "observaciones", component: ObservacionListarComponent },
       { path: "observaciones/crear", component: ObservacionCrearEditarComponent },
       { path: "observaciones/editar/:id", component: ObservacionCrearEditarComponent },

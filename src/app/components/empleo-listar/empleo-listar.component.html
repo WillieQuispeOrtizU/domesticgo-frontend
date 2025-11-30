@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- Header -->
   <div class="page-header">
     <div class="header-content">
       <h1 class="page-title">
@@ -14,7 +13,6 @@
     </button>
   </div>
 
-  <!-- Filtros -->
   <div class="filters-section">
     <div class="search-container">
       <mat-form-field appearance="outline" class="search-field">
@@ -25,7 +23,6 @@
     </div>
   </div>
 
-  <!-- Loading -->
   <div class="loading-container" *ngIf="loading">
     <div class="loading-card">
       <div class="loading-content">
@@ -35,7 +32,6 @@
     </div>
   </div>
 
-  <!-- Lista de empleos -->
   <div class="items-grid" *ngIf="!loading">
     <div class="item-card" *ngFor="let empleo of empleosFiltrados">
       <div class="card-header">
@@ -52,12 +48,6 @@
       </div>
 
       <div class="card-content">
-        <div class="info-row">
-          <mat-icon class="info-icon">info</mat-icon>
-          <span class="info-label">ID:</span>
-          <span class="info-value">{{empleo.idEmpleo}}</span>
-        </div>
-        
         <div class="info-row">
           <mat-icon class="info-icon">work_outline</mat-icon>
           <span class="info-label">Nombre:</span>
@@ -78,7 +68,6 @@
     </div>
   </div>
 
-  <!-- Empty state -->
   <div class="empty-state" *ngIf="!loading && empleosFiltrados.length === 0">
     <div class="empty-card">
       <mat-icon class="empty-icon">work_outline</mat-icon>

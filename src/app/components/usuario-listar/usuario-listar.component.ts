@@ -82,12 +82,21 @@ export class UsuarioListarComponent implements OnInit {
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase()
-    this.usuariosFiltrados = this.usuarios.filter(
-      (usuario) =>
-        usuario.nombres.toLowerCase().includes(filterValue) ||
-        usuario.apellidoPaterno.toLowerCase().includes(filterValue) ||
-        usuario.email.toLowerCase().includes(filterValue) ||
-        usuario.empleo?.nombreEmpleo.toLowerCase().includes(filterValue),
-    )
+
+    this.usuariosFiltrados = this.usuarios.filter((usuario) => {
+      const nombres = (usuario.nombres || "").toLowerCase();
+      const apellidoPaterno = (usuario.apellidoPaterno || "").toLowerCase();
+      const email = (usuario.email || "").toLowerCase();
+      const empleo = (usuario.empleo?.nombreEmpleo || "").toLowerCase();
+      const numDoc = (usuario.numeroDocumento || "").toLowerCase();
+      const celular = (usuario.numeroCelular || "").toLowerCase();
+
+      return nombres.includes(filterValue) ||
+             apellidoPaterno.includes(filterValue) ||
+             email.includes(filterValue) ||
+             empleo.includes(filterValue) ||
+             numDoc.includes(filterValue) ||
+             celular.includes(filterValue);
+    });
   }
 }

@@ -7,7 +7,9 @@ export interface Usuario {
   apellidoPaterno: string
   apellidoMaterno: string
   email: string
-  foto: string
-  role: Role
-  empleo: Empleo
+  empleo?: Empleo
+  tipoDocumento: string
+  numeroDocumento: string
+  numeroCelular: string
+  fechaNacimiento: string | Date
 }

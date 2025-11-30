@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- Header -->
   <div class="page-header">
     <div class="header-content">
       <h1 class="page-title">
@@ -14,18 +13,16 @@
     </button>
   </div>
 
-  <!-- Filtros -->
   <div class="filters-section">
     <div class="search-container">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Buscar usuarios</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Nombre, email, empleo...">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Nombre, DNI, celular...">
         <mat-icon matSuffix class="search-icon">search</mat-icon>
       </mat-form-field>
     </div>
   </div>
 
-  <!-- Loading -->
   <div class="loading-container" *ngIf="loading">
     <div class="loading-card">
       <div class="loading-content">
@@ -35,7 +32,6 @@
     </div>
   </div>
 
-  <!-- Lista de usuarios -->
   <div class="items-grid" *ngIf="!loading">
     <div class="item-card" *ngFor="let usuario of usuariosFiltrados">
       <div class="card-header">
@@ -53,15 +49,33 @@
 
       <div class="card-content">
         <div class="info-row">
-          <mat-icon class="info-icon">badge</mat-icon>
-          <span class="info-label">Apellido Materno:</span>
-          <span class="info-value">{{usuario.apellidoMaterno || 'No especificado'}}</span>
-        </div>
-        
-        <div class="info-row">
           <mat-icon class="info-icon">work</mat-icon>
           <span class="info-label">Empleo:</span>
-          <span class="empleo-chip">{{usuario.empleo.nombreEmpleo}}</span>
+          <span class="empleo-chip">{{usuario.empleo?.nombreEmpleo || 'Sin empleo'}}</span>
+        </div>
+
+        <div class="info-row">
+          <mat-icon class="info-icon">badge</mat-icon>
+          <span class="info-label">Doc:</span>
+          <span class="info-value">{{usuario.tipoDocumento}}: {{usuario.numeroDocumento}}</span>
+        </div>
+
+        <div class="info-row">
+          <mat-icon class="info-icon">phone</mat-icon>
+          <span class="info-label">Celular:</span>
+          <span class="info-value">{{usuario.numeroCelular}}</span>
+        </div>
+
+        <div class="info-row">
+          <mat-icon class="info-icon">cake</mat-icon>
+          <span class="info-label">Nacimiento:</span>
+          <span class="info-value">{{usuario.fechaNacimiento | date:'dd/MM/yyyy'}}</span>
+        </div>
+
+        <div class="info-row" *ngIf="usuario.apellidoMaterno">
+          <mat-icon class="info-icon">family_restroom</mat-icon>
+          <span class="info-label">Ap. Materno:</span>
+          <span class="info-value">{{usuario.apellidoMaterno}}</span>
         </div>
       </div>
 
@@ -78,7 +92,6 @@
     </div>
   </div>
 
-  <!-- Empty state -->
   <div class="empty-state" *ngIf="!loading && usuariosFiltrados.length === 0">
     <div class="empty-card">
       <mat-icon class="empty-icon">people_outline</mat-icon>

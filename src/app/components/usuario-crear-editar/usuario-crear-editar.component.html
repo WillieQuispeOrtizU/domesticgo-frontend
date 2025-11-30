@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- Header -->
   <div class="page-header">
     <button mat-icon-button (click)="volver()" class="back-button">
       <mat-icon>arrow_back</mat-icon>
@@ -13,34 +12,26 @@
     </div>
   </div>
 
-  <!-- Formulario -->
   <div class="form-section">
     <div class="form-card">
       <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
-          <!-- Nombres -->
+
           <div class="form-field full-width">
             <mat-form-field appearance="outline">
               <mat-label>Nombres</mat-label>
               <input matInput formControlName="nombres" required>
               <mat-icon matSuffix>person</mat-icon>
               <mat-error *ngIf="usuarioForm.get('nombres')?.hasError('required')">
-                Los nombres son requeridos
-              </mat-error>
-              <mat-error *ngIf="usuarioForm.get('nombres')?.hasError('maxlength')">
-                Máximo 100 caracteres
+                Requerido
               </mat-error>
             </mat-form-field>
           </div>
 
-          <!-- Apellidos -->
           <div class="form-field">
             <mat-form-field appearance="outline">
               <mat-label>Apellido Paterno</mat-label>
               <input matInput formControlName="apellidoPaterno">
-              <mat-error *ngIf="usuarioForm.get('apellidoPaterno')?.hasError('maxlength')">
-                Máximo 50 caracteres
-              </mat-error>
             </mat-form-field>
           </div>
 
@@ -48,37 +39,65 @@
             <mat-form-field appearance="outline">
               <mat-label>Apellido Materno</mat-label>
               <input matInput formControlName="apellidoMaterno">
-              <mat-error *ngIf="usuarioForm.get('apellidoMaterno')?.hasError('maxlength')">
-                Máximo 50 caracteres
-              </mat-error>
             </mat-form-field>
           </div>
 
-          <!-- Email -->
           <div class="form-field full-width">
             <mat-form-field appearance="outline">
               <mat-label>Email</mat-label>
               <input matInput type="email" formControlName="email" required>
               <mat-icon matSuffix>email</mat-icon>
-              <mat-error *ngIf="usuarioForm.get('email')?.hasError('required')">
-                El email es requerido
-              </mat-error>
               <mat-error *ngIf="usuarioForm.get('email')?.hasError('email')">
-                Formato de email inválido
+                Email inválido
               </mat-error>
             </mat-form-field>
           </div>
 
-          <!-- Foto -->
-          <div class="form-field full-width">
+          <div class="form-field">
             <mat-form-field appearance="outline">
-              <mat-label>Foto (URL)</mat-label>
-              <input matInput formControlName="foto">
-              <mat-icon matSuffix>image</mat-icon>
+              <mat-label>Tipo Documento</mat-label>
+              <mat-select formControlName="tipoDocumento" required>
+                <mat-option value="DNI">DNI</mat-option>
+                <mat-option value="CE">Carnet Extranjería</mat-option>
+                <mat-option value="PASAPORTE">Pasaporte</mat-option>
+              </mat-select>
             </mat-form-field>
           </div>
 
-          <!-- Empleo -->
+          <div class="form-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Número Documento</mat-label>
+              <input matInput formControlName="numeroDocumento" required>
+              <mat-icon matSuffix>badge</mat-icon>
+              <mat-error *ngIf="usuarioForm.get('numeroDocumento')?.hasError('required')">
+                Requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Celular</mat-label>
+              <input matInput formControlName="numeroCelular" required>
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error *ngIf="usuarioForm.get('numeroCelular')?.hasError('required')">
+                Requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha Nacimiento</mat-label>
+              <input matInput [matDatepicker]="pickerNac" formControlName="fechaNacimiento" required>
+              <mat-datepicker-toggle matSuffix [for]="pickerNac"></mat-datepicker-toggle>
+              <mat-datepicker #pickerNac></mat-datepicker>
+              <mat-error *ngIf="usuarioForm.get('fechaNacimiento')?.hasError('required')">
+                Requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
+
           <div class="form-field full-width">
             <mat-form-field appearance="outline">
               <mat-label>Empleo</mat-label>
@@ -89,19 +108,19 @@
               </mat-select>
               <mat-icon matSuffix>work</mat-icon>
               <mat-error *ngIf="usuarioForm.get('empleo')?.hasError('required')">
-                El empleo es requerido
+                Requerido
               </mat-error>
             </mat-form-field>
           </div>
+
         </div>
 
-        <!-- Acciones -->
         <div class="form-actions">
           <button mat-button type="button" (click)="volver()" class="cancel-button">
             <mat-icon>close</mat-icon>
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="submit" 
+          <button mat-raised-button color="primary" type="submit"
                   [disabled]="!usuarioForm.valid || loading" class="submit-button">
             <mat-icon>{{loading ? 'hourglass_empty' : (isEditing ? 'save' : 'add')}}</mat-icon>
             {{loading ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}}

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ChatService {
-  private apiKey = 'AIzaSyBm-7Fz1bnePZTcunIPyqDCyne3g9DDi2Y';
+  private apiKey = 'AIzaSyAvP49C1QiV_X-k-mwzPsNhXzAwNMoEKkk';
   private apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=${this.apiKey}`;
 private instruccionesDelSistema = `
     CONTEXTO DE LA EMPRESA (CONFIDENCIAL):
